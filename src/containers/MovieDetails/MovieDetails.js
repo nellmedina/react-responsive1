@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { getMovieDetailsById, getMovieReviews } from '../../services/movieAPI';
 import {
   BASE_BACKDROP_PATH,
@@ -28,7 +27,13 @@ const MovieDetails = () => {
       try {
         const movieInfo = await getMovieDetailsById(id);
         const movieReviews = await getMovieReviews(id);
-        setState({ loading: false, movieInfo, movieReviews, error: false });
+        setState({
+          ...state,
+          loading: false,
+          movieInfo,
+          movieReviews,
+          error: false,
+        });
       } catch (err) {
         setState({ loading: false, error: true });
       }
@@ -37,7 +42,6 @@ const MovieDetails = () => {
 
   useEffect(() => {
     setMovie();
-    console.log(history);
   }, []);
 
   let reviews;
@@ -49,8 +53,6 @@ const MovieDetails = () => {
   } else {
     pathname = '/' + history.location.state;
   }
-
-  console.log(pathname);
 
   if (movieReviews && movieReviews.length > 2) {
     const prevReviews = movieReviews.slice(0, 2);
